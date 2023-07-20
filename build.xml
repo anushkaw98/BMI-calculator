@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="bmi-calculator-build" default="war" basedir=".">
+
+    <!-- Define properties -->
+    <property name="src.dir" value="bmi-calculator"/>
+    <property name="build.dir" value="build"/>
+    <property name="war.file" value="bmi-calculator.war"/>
+
+    <!-- Clean build directory -->
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+    </target>
+
+    <!-- Create build directory -->
+    <target name="init">
+        <mkdir dir="${build.dir}"/>
+    </target>
+
+    <!-- Copy files to build directory -->
+    <target name="copy-files" depends="clean, init">
+        <copy todir="${build.dir}">
+            <fileset dir="${src.dir}"/>
+        </copy>
+    </target>
+
+    <!-- Create the war file -->
+    <target name="war" depends="copy-files">
+        <war destfile="${war.file}" webxml="${build.dir}/WEB-INF/web.xml">
+            <fileset dir="${build.dir}"/>
+        </war>
+    </target>
+
+</project>
