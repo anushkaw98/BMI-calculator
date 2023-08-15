@@ -21,7 +21,7 @@ pipeline {
                 sh 'cp src/bmi-calculator/WEB-INF/web.xml build/bmi-calculator/WEB-INF/'
 
                 // Create the WAR file
-                sh 'jar cvf bmi-calculator.war -C build/bmi-calculator .'
+                sh 'javac -d build/classes *.java'
 
                 // Archive the WAR file
                 archiveArtifacts artifacts: 'bmi-calculator.war', allowEmptyArchive: true
