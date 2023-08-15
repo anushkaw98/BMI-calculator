@@ -1,15 +1,30 @@
 pipeline {
     agent any
-    stages{
-        stage('Build'){
+
+    stages {
+        stage('Checkout') {
             steps {
-                sh 'mvn clean package'
+                // Checkout the source code from your Git repository
+                checkout scm
             }
-            post {
-                success {
-                    echo 'Now Archiving...'
-                    archiveArtifacts artifacts: '**/target/*.war'
-                }
+        }
+
+        stage('Build and Package') {
+            steps {
+                // Compile your project (if needed)
+                sh 'javac -d build/classes src/bmi-calculator/*.java'
+                
+                // Create the WAR file structure
+                sh 'mkdir -p build/bmi-calculator/WEB-INF/classes'
+                sh 'cp -r build/classes/* build/bmi-calculator/WEB-INF/classes/'
+                sh 'cp -r src/bmi-calculator/index.html src/bmi-calculator/styles.css src/bmi-calculator/script.js build/bmi-calculator/'
+                sh 'cp src/bmi-calculator/WEB-INF/web.xml build/bmi-calculator/WEB-INF/'
+
+                // Create the WAR file
+                sh 'jar cvf bmi-calculator.war -C build/bmi-calculator .'
+
+                // Archive the WAR file
+                archiveArtifacts artifacts: 'bmi-calculator.war', allowEmptyArchive: true
             }
         }
     }
